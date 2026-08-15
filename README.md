@@ -28,8 +28,9 @@ Managing personal finances using multiple spreadsheets or complex tools usually 
 - **Combined Net Worth**: Automatically calculates true net worth by combining liquid savings with investment asset values.
 - **Visual Analytics**: Clean charts (powered by Chart.js) showing monthly income vs expense, category breakdown, and savings rate.
 - **Multi-Asset Portfolio**: Track stocks, mutual funds, FDs, and crypto with automatic profit/loss calculation.
-- **Lightweight & Self-Contained**: Uses SQLite with WAL mode via `better-sqlite3`, so the project runs immediately with zero external database setup.
+- **Scalable Document Database**: Uses **MongoDB** with **Mongoose ODM** for flexible schema validation, relational user referencing, and robust data persistence.
 - **Theme Support**: Easily toggle between Dark Slate, Clean Light, and Executive Indigo themes.
+- **PDF & JSON Export**: Generate and download full PDF statements or export all account financial data as JSON.
 
 ---
 
@@ -54,6 +55,12 @@ Managing personal finances using multiple spreadsheets or complex tools usually 
   - Monthly cash flow comparison (Income vs Expense).
   - Expense distribution by category (Doughnut chart).
   - Savings rate percentage trend over time.
+- **Settings & Profile Management**:
+  - Update user profile details (Name, Phone, Preferred Currency).
+  - Set monthly income and savings targets.
+  - Change account password securely.
+  - Export complete financial data as JSON or generate PDF statements.
+  - Delete account with cascading data deletion.
 - **Theme Switcher**: Dark Slate, Clean Light, and Executive Indigo options saved in browser storage.
 - **Feedback Form**: Built-in form to send feedback or support queries.
 
@@ -67,7 +74,7 @@ Managing personal finances using multiple spreadsheets or complex tools usually 
 - Passwords hashed with bcrypt (10 salt rounds).
 - Protected API endpoints verified using Bearer JWT authentication tokens.
 - User data isolation (each user can only query and modify their own records).
-- Self-initializing SQLite database with WAL mode for fast local read/write performance.
+- MongoDB Mongoose schema models ensuring data integrity and robust indexing.
 
 ---
 
@@ -75,42 +82,51 @@ Managing personal finances using multiple spreadsheets or complex tools usually 
 
 - **Frontend**: HTML5, Vanilla JavaScript (ES6+), Custom CSS3 (CSS Variables, Flexbox/Grid), Chart.js
 - **Backend**: Node.js, Express.js
-- **Database**: SQLite (via `better-sqlite3`)
+- **Database**: MongoDB (via `mongoose`)
 - **Authentication**: JSON Web Tokens (`jsonwebtoken`), `bcryptjs`
-- **Deployment**: Render / Vercel
+- **Deployment**: Render / Vercel / Railway
 
 ---
 
 ## 📁 Project Structure
 
 ```text
-finance-website/
+Wealthpulse-main/
 ├── backend/
 │   ├── db/
-│   │   ├── index.js          # Database schema, table setup & admin seeder
-│   │   └── data.sqlite       # Local SQLite database file (auto-generated)
+│   │   └── index.js          # MongoDB connection initialization & default admin seeder
 │   ├── middleware/
-│   │   └── auth.js           # JWT authentication & admin check middleware
+│   │   └── auth.js           # JWT authentication & admin verification middleware
+│   ├── models/
+│   │   ├── Expense.js        # Expense schema & model
+│   │   ├── Feedback.js       # Feedback ticket schema & model
+│   │   ├── Goal.js           # Savings goals schema & model
+│   │   ├── Habit.js          # Habit tracker schema & model
+│   │   ├── HabitLog.js       # Daily habit completion check-in schema & model
+│   │   ├── Income.js         # Income record schema & model
+│   │   ├── Investment.js     # Portfolio asset & P&L schema & model
+│   │   └── User.js           # User account, credentials & target preferences schema
 │   ├── routes/
 │   │   ├── admin.js          # Admin metrics, user management & feedback routes
 │   │   ├── analytics.js      # Aggregated chart data endpoints
-│   │   ├── auth.js           # Register, login, and user profile routes
+│   │   ├── auth.js           # Auth, profile, password update & data export routes
 │   │   ├── expenses.js       # Expense CRUD and category summaries
 │   │   ├── feedback.js       # Feedback submission and status update
 │   │   ├── goals.js          # Savings goals and contribution tracking
 │   │   ├── habits.js         # Habit streaks and check-ins
 │   │   ├── income.js         # Income record management
-│   │   └── investments.js   # Portfolio assets and P&L calculation
+│   │   └── investments.js    # Portfolio assets and P&L calculation
 │   ├── .env.example          # Sample environment variables
-│   ├── .env                  # Local environment file
-│   ├── package.json          # Backend dependencies
+│   ├── .env                  # Backend environment configuration
+│   ├── package.json          # Backend dependencies and scripts
 │   └── server.js             # Express app entry & static frontend server
 ├── frontend/
-│   ├── Css/
-│   │   └── styles.css        # Stylesheet & color themes
-│   ├── JS/
+│   ├── css/
+│   │   └── styles.css        # Core stylesheet & color themes
+│   ├── js/
 │   │   ├── api.js            # API request helper & JWT token handler
-│   │   └── layout.js         # Sidebar navigation & theme toggle logic
+│   │   ├── layout.js         # Sidebar navigation & theme toggle logic
+│   │   └── pdf-generator.js  # Client-side PDF financial report generator
 │   ├── admin.html            # Admin dashboard & user management
 │   ├── analytics.html        # Wealth charts & financial metrics
 │   ├── dashboard.html        # Main user dashboard
@@ -120,11 +136,12 @@ finance-website/
 │   ├── index.html            # Landing page
 │   ├── investments.html      # Investment portfolio & P&L
 │   ├── login.html            # User login page
-│   └── register.html         # User signup page
-├── vercel.json               # Vercel configuration
-├── .gitignore
-├── README.md                 # Original README
-└── README_NEW.md             # Updated WealthPulse README
+│   ├── register.html         # User signup page
+│   └── settings.html         # Profile settings, targets & export options
+├── .env.example              # Root sample environment file
+├── .gitignore                # Git ignored paths
+├── package.json              # Root package configuration & run scripts
+└── README.md                 # Project documentation
 ```
 
 ---
@@ -132,37 +149,40 @@ finance-website/
 ## ⚙️ How to Run Locally
 
 ### 1. Prerequisites
-- Node.js (v18 or higher)
-- npm
+- **Node.js** (v18 or higher)
+- **npm**
+- **MongoDB** (Local MongoDB Community Server running or a free [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) Cloud Connection String)
 
 ### 2. Steps to Run
 
 1. Open a terminal and navigate to the project directory:
    ```bash
-   cd "finance website"
+   cd Wealthpulse-main
    ```
 
-2. Go to the backend folder and install packages:
+2. Install dependencies:
    ```bash
-   cd backend
    npm install
    ```
+   *(Or navigate to the `backend` folder and run `npm install`)*
 
 3. Create your `.env` file (you can copy `.env.example`):
    ```env
    PORT=8000
-   JWT_SECRET=your_jwt_secret_key_here
+   JWT_SECRET=super_secret_wealthpulse_key_2026
    ADMIN_EMAIL=admin@financetrack.com
    ADMIN_PASSWORD=Admin@12345
+   MONGODB_URI=mongodb://127.0.0.1:27017/wealthpulse
    ```
+   > **Note:** If using MongoDB Atlas in the cloud, replace `MONGODB_URI` with your connection string:
+   > `MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/wealthpulse?retryWrites=true&w=majority`
 
 4. Start the server:
    ```bash
    npm start
    ```
-   *(Or run `npm run dev` if you have nodemon installed)*
 
-5. Open your browser and go to:
+5. Open your browser and navigate to:
    ```text
    http://localhost:8000
    ```
@@ -171,19 +191,23 @@ finance-website/
 
 ## 🔌 API Endpoints
 
-### Auth (`/api/auth`)
+### Auth & User (`/api/auth`)
 | Method | Endpoint | Description | Auth |
 | :--- | :--- | :--- | :---: |
-| `POST` | `/api/auth/register` | Register new user | No |
-| `POST` | `/api/auth/login` | Login user & return token | No |
-| `GET` | `/api/auth/me` | Get logged-in user profile | Yes |
+| `POST` | `/api/auth/register` | Register new user account | No |
+| `POST` | `/api/auth/login` | Login user & return JWT token | No |
+| `GET` | `/api/auth/me` | Get currently logged-in user profile | Yes |
+| `PATCH` | `/api/auth/profile` | Update profile, currency, or targets | Yes |
+| `POST` | `/api/auth/change-password` | Change account password | Yes |
+| `GET` | `/api/auth/export-all` | Export complete financial data JSON | Yes |
+| `DELETE` | `/api/auth/delete-account` | Delete user account & all linked data | Yes |
 
 ### Income (`/api/income`)
 | Method | Endpoint | Description | Auth |
 | :--- | :--- | :--- | :---: |
 | `GET` | `/api/income` | Get all income entries | Yes |
-| `POST` | `/api/income` | Add new income | Yes |
-| `DELETE` | `/api/income/:id` | Delete income | Yes |
+| `POST` | `/api/income` | Add new income entry | Yes |
+| `DELETE` | `/api/income/:id` | Delete income entry | Yes |
 
 ### Expenses (`/api/expenses`)
 | Method | Endpoint | Description | Auth |
@@ -232,15 +256,20 @@ finance-website/
 | :--- | :--- | :--- | :---: |
 | `GET` | `/api/admin/stats` | Platform summary counts | Admin |
 | `GET` | `/api/admin/users` | List all users | Admin |
-| `PATCH` | `/api/admin/users/:id/role` | Change user role | Admin |
+| `PATCH` | `/api/admin/users/:id/role` | Change user role (User/Admin) | Admin |
 | `DELETE` | `/api/admin/users/:id` | Delete user account | Admin |
 | `GET` | `/api/admin/feedback` | List user feedback tickets | Admin |
 | `PATCH` | `/api/admin/feedback/:id` | Resolve feedback ticket | Admin |
+
+### System (`/api/health`)
+| Method | Endpoint | Description | Auth |
+| :--- | :--- | :--- | :---: |
+| `GET` | `/api/health` | Server uptime & status check | No |
 
 ---
 
 ## 📌 Reviewer Notes
 
-- **Zero DB Setup**: SQLite is built-in via `better-sqlite3`, so you do not need MongoDB or MySQL to run and evaluate this project.
-- **Local Persistence**: All data persists in `backend/db/data.sqlite`.
-- **Integrated Frontend**: The Express backend serves the frontend files directly on the same port (`8000`).
+- **Database Architecture**: Powered by **MongoDB** with Mongoose models (`User`, `Income`, `Expense`, `Habit`, `HabitLog`, `Goal`, `Investment`, `Feedback`) providing schema validation and fast indexing.
+- **Default Admin Account**: An admin account is seeded automatically upon startup (`admin@financetrack.com` / `Admin@12345`) for quick evaluation of admin management features.
+- **Integrated Architecture**: Express serves both the REST API and the frontend static assets seamlessly on port `8000`.
