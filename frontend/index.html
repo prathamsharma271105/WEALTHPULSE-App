@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WealthPulse · Financial Habit Builder & Wealth Growth Tracker</title>
+  <meta name="description" content="Build disciplined money habits, track daily cash flow, and watch your net worth compound with WealthPulse." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div class="landing-wrap">
+    <!-- Top Navigation -->
+    <header class="flex between" style="padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+      <div class="brand-row" style="margin-bottom: 0; padding: 0;">
+        <div class="brand-mark">W</div>
+        <div>
+          <div class="brand-title">WealthPulse</div>
+          <div class="brand-subtitle">Habit & Wealth Intelligence</div>
+        </div>
+      </div>
+      <nav class="flex gap-12" style="align-items: center;">
+        <a class="btn btn-ghost btn-sm" href="/login.html" data-testid="top-login-btn">Log in</a>
+        <a class="btn btn-primary btn-sm" href="/register.html" data-testid="top-signup-btn">Start Free Journey →</a>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div>
+        <div class="flex gap-8" style="margin-bottom: 14px;">
+          <span class="badge green">✨ The Habit-First Personal Finance System</span>
+        </div>
+        <h1>Master the daily habits that build long-term wealth.</h1>
+        <p>
+          Most personal finance apps only track what you already spent. WealthPulse helps you build 
+          disciplined daily routines—saving consistently, curbing impulse spend, and growing your net worth month over month.
+        </p>
+        
+        <div class="cta-row">
+          <a class="btn btn-primary" href="/register.html" data-testid="cta-register">Create Your Account Free</a>
+          <a class="btn btn-ghost" href="/login.html" data-testid="cta-login">Existing Member Login</a>
+        </div>
+
+        <div class="flex gap-16 mt-24" style="font-size: 13px; color: var(--text-muted); align-items: center;">
+          <span>✓ Zero Bank Logins Required</span>
+          <span>✓ 100% Private & Encrypted</span>
+          <span>✓ Streak-Based Motivation</span>
+        </div>
+      </div>
+
+      <!-- Human-Crafted Financial Snapshot Card -->
+      <div class="hero-mockup-card">
+        <div class="mockup-header">
+          <div class="mockup-stat-block">
+            <div class="mockup-label">Total Net Worth</div>
+            <div class="mockup-val">₹ 6,45,200</div>
+          </div>
+          <span class="badge green">▲ +12.8% this month</span>
+        </div>
+
+        <div class="mockup-mini-row">
+          <div class="mockup-habit-item">
+            <div class="mockup-check-dot">✓</div>
+            <div>
+              <div style="font-weight: 600; color: var(--text);">Auto-save ₹250 daily into Index SIP</div>
+              <div style="font-size: 11px; color: var(--text-muted);">24 day streak 🔥 · High discipline</div>
+            </div>
+          </div>
+          <span class="badge blue">Daily Habit</span>
+        </div>
+
+        <div class="mockup-mini-row">
+          <div class="mockup-habit-item">
+            <div class="mockup-check-dot">✓</div>
+            <div>
+              <div style="font-weight: 600; color: var(--text);">Review weekly discretionary spending</div>
+              <div style="font-size: 11px; color: var(--text-muted);">Completed today · Saved ~₹1,800</div>
+            </div>
+          </div>
+          <span class="badge amber">Weekly</span>
+        </div>
+
+        <div>
+          <div class="flex between mb-8" style="font-size: 12px; color: var(--text-muted);">
+            <span>Emergency Fund (₹1,50,000 Target)</span>
+            <span style="font-weight: 600; color: var(--text);">₹1,20,000 (80%)</span>
+          </div>
+          <div class="progress">
+            <div style="width: 80%; background: var(--success);"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Methodology Section -->
+    <section class="mt-24" style="margin-top: 80px; padding: 36px 30px; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-lg);">
+      <div style="max-width: 680px; margin-bottom: 28px;">
+        <span class="badge amber">💡 Why Habits Beat Budgeting</span>
+        <h2 style="font-size: 24px; margin-top: 10px;">Budgets feel restrictive. Habits build compounding freedom.</h2>
+        <p style="color: var(--text-muted); font-size: 14.5px; margin-top: 6px;">
+          Research shows 80% of strict budgets fail within 90 days. WealthPulse focuses on small, frictionless daily actions that naturally increase your savings rate and investment portfolio.
+        </p>
+      </div>
+
+      <div class="grid cols-3">
+        <div style="background: var(--bg-0); padding: 18px 20px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+          <div style="font-weight: 700; color: var(--text); font-size: 15px; margin-bottom: 6px;">1. Micro-Habits</div>
+          <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Start with tiny daily saving targets. Reinforce consistency with visual streaks.</p>
+        </div>
+        <div style="background: var(--bg-0); padding: 18px 20px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+          <div style="font-weight: 700; color: var(--text); font-size: 15px; margin-bottom: 6px;">2. Active Cash Awareness</div>
+          <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Log daily expenses in seconds. Notice spending triggers before they derail your month.</p>
+        </div>
+        <div style="background: var(--bg-0); padding: 18px 20px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+          <div style="font-weight: 700; color: var(--text); font-size: 15px; margin-bottom: 6px;">3. Compounding Visibility</div>
+          <p style="font-size: 13px; color: var(--text-muted); margin: 0;">See your real net worth (savings + assets) expand as habits stick over quarters.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Features Grid -->
+    <section class="feature-grid">
+      <div style="text-align: center; margin-bottom: 36px;">
+        <span class="badge blue">Everything You Need</span>
+        <h2 style="font-size: 28px; margin-top: 10px;">Designed for clarity, built for compounding.</h2>
+      </div>
+
+      <div class="grid cols-3">
+        <div class="feature-card">
+          <div style="font-size: 24px; margin-bottom: 12px;">📊</div>
+          <h3>Income & Expense Ledger</h3>
+          <p>Effortlessly log income streams and categorize expenses. Get instant insights on where your money actually flows.</p>
+        </div>
+
+        <div class="feature-card">
+          <div style="font-size: 24px; margin-bottom: 12px;">⚡</div>
+          <h3>Habit Streak Builder</h3>
+          <p>Create daily, weekly, or monthly financial habits. Track completion streaks, maintain accountability, and never break the chain.</p>
+        </div>
+
+        <div class="feature-card">
+          <div style="font-size: 24px; margin-bottom: 12px;">📈</div>
+          <h3>True Net Worth Tracker</h3>
+          <p>Aggregate liquid bank savings, mutual funds, equities, and physical assets into one clear net worth trajectory.</p>
+        </div>
+
+        <div class="feature-card">
+          <div style="font-size: 24px; margin-bottom: 12px;">🎯</div>
+          <h3>Target Savings Goals</h3>
+          <p>Set milestone targets for emergency funds, travel, or vehicle down payments with dynamic percentage progress.</p>
+        </div>
+
+        <div class="feature-card">
+          <div style="font-size: 24px; margin-bottom: 12px;">📉</div>
+          <h3>Savings Rate Analytics</h3>
+          <p>Visualize your monthly cash flow, category breakdowns, and savings percentage with clean, responsive charts.</p>
+        </div>
+
+        <div class="feature-card">
+          <div style="font-size: 24px; margin-bottom: 12px;">🛡️</div>
+          <h3>Private & Isolated</h3>
+          <p>Secure JWT authentication and dedicated SQLite storage ensure your financial data remains confidential and under your control.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action Banner -->
+    <section style="margin-top: 70px; padding: 48px 36px; background: linear-gradient(135deg, var(--bg-2), var(--bg-1)); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); text-align: center;">
+      <h2 style="font-size: 30px; margin-bottom: 12px;">Start building your wealth habits today.</h2>
+      <p style="color: var(--text-muted); font-size: 16px; max-width: 540px; margin: 0 auto 24px;">
+        Join thousands of disciplined professionals who turned small daily habits into lasting financial independence.
+      </p>
+      <a class="btn btn-primary" href="/register.html" style="padding: 12px 28px; font-size: 15px;">Create Free Account →</a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="flex between mt-24" style="margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted);">
+      <div>© WealthPulse · Financial Habit Builder & Wealth Growth Platform</div>
+      <div class="flex gap-16">
+        <a href="/login.html">Member Login</a>
+        <a href="/register.html">Get Started</a>
+        <a href="/dashboard.html">Dashboard</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script>
+    if (Auth.token) {
+      window.location.href = Auth.user && Auth.user.role === 'admin' ? '/admin.html' : '/dashboard.html';
+    }
+  </script>
+</body>
+</html>

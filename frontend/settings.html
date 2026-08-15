@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings · WealthPulse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    .settings-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 18px;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .breadcrumb-text {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .breadcrumb-text strong {
+      color: var(--text);
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+    .card-icon-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 18px;
+    }
+    .danger-zone-box {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .btn-green-solid {
+      background: #10b981;
+      color: #ffffff;
+      border-color: #059669;
+    }
+    .btn-green-solid:hover {
+      background: #059669;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside>
+
+    <main class="main">
+      <!-- Top Bar / Breadcrumb Navigation -->
+      <div class="settings-topbar">
+        <div class="breadcrumb-text">
+          WealthPulse / <strong>Settings</strong>
+        </div>
+        <div class="flex gap-8" style="align-items: center; flex-wrap: wrap;">
+          <button class="btn btn-ghost btn-sm" onclick="generateFullFinancialReport({ buttonElement: this })" title="Download executive summary PDF">
+            📄 Download Report (PDF)
+          </button>
+          <button class="btn btn-ghost btn-sm" onclick="exportUserDataJson(this)" title="Export JSON dataset">
+            📥 Export Data
+          </button>
+          <button class="btn btn-ghost btn-sm" id="theme-toggle-btn" onclick="toggleThemeMode()" title="Toggle color theme">
+            ☀️ Light Mode
+          </button>
+          <div class="status-pill">
+            <span class="status-dot"></span>
+            <span id="top-user-name">fast</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page Header -->
+      <div class="page-header" style="margin-bottom: 24px;">
+        <div>
+          <div class="flex gap-8" style="align-items: center; margin-bottom: 6px;">
+            <span class="badge" style="background: rgba(16, 185, 129, 0.12); color: var(--success); border-color: rgba(16, 185, 129, 0.3);">
+              ⚙️ Account Settings
+            </span>
+          </div>
+          <h1>Account & Financial Preferences</h1>
+          <p>Manage your profile, financial targets, security controls, and data privacy options.</p>
+        </div>
+      </div>
+
+      <!-- Alerts Container -->
+      <div id="settings-global-alert"></div>
+
+      <!-- Settings 4-Card Grid -->
+      <div class="grid cols-2">
+        <!-- 1. Profile Information Card -->
+        <div class="card" id="card-profile">
+          <div class="card-icon-title">
+            <span style="font-size: 18px;">👤</span> Profile Information
+          </div>
+          <form id="profile-info-form">
+            <div class="form-group">
+              <label for="prof-name">Full Name</label>
+              <input id="prof-name" type="text" required placeholder="Your full name" />
+            </div>
+            <div class="form-group">
+              <label for="prof-email">Email Address</label>
+              <input id="prof-email" type="email" required placeholder="you@example.com" />
+            </div>
+            <div class="form-group">
+              <label for="prof-phone">Phone Number (Optional)</label>
+              <input id="prof-phone" type="tel" placeholder="+91 98765 43210" />
+            </div>
+            <button type="submit" class="btn btn-green-solid" id="btn-save-profile">
+              Save Profile Changes
+            </button>
+          </form>
+        </div>
+
+        <!-- 2. Financial Preferences Card -->
+        <div class="card" id="card-preferences">
+          <div class="card-icon-title">
+            <span style="font-size: 18px;">💰</span> Financial Preferences
+          </div>
+          <form id="financial-prefs-form">
+            <div class="form-group">
+              <label for="pref-currency">Default Currency</label>
+              <select id="pref-currency">
+                <option value="INR">INR (₹) - Indian Rupee</option>
+                <option value="USD">USD ($) - US Dollar</option>
+                <option value="EUR">EUR (€) - Euro</option>
+                <option value="GBP">GBP (£) - British Pound</option>
+                <option value="AED">AED (د.إ) - UAE Dirham</option>
+                <option value="SGD">SGD (S$) - Singapore Dollar</option>
+                <option value="CAD">CAD (C$) - Canadian Dollar</option>
+                <option value="AUD">AUD (A$) - Australian Dollar</option>
+                <option value="JPY">JPY (¥) - Japanese Yen</option>
+              </select>
+            </div>
+            <div class="grid cols-2" style="gap: 12px;">
+              <div class="form-group">
+                <label for="pref-income-target">Monthly Income Target</label>
+                <input id="pref-income-target" type="number" step="any" min="0" placeholder="62000" />
+              </div>
+              <div class="form-group">
+                <label for="pref-savings-target">Monthly Savings Target</label>
+                <input id="pref-savings-target" type="number" step="any" min="0" placeholder="20000" />
+              </div>
+            </div>
+            <button type="submit" class="btn btn-ghost" id="btn-update-prefs">
+              Update Preferences
+            </button>
+          </form>
+        </div>
+
+        <!-- 3. Security & Authentication Card -->
+        <div class="card" id="card-security">
+          <div class="card-icon-title">
+            <span style="font-size: 18px;">🔵</span> Security & Authentication
+          </div>
+          <form id="security-password-form">
+            <div class="form-group">
+              <label for="sec-current-pwd">Current Password</label>
+              <input id="sec-current-pwd" type="password" required placeholder="••••••••" autocomplete="current-password" />
+            </div>
+            <div class="form-group">
+              <label for="sec-new-pwd">New Password (min 6 chars)</label>
+              <input id="sec-new-pwd" type="password" minlength="6" required placeholder="••••••••" autocomplete="new-password" />
+            </div>
+            <button type="submit" class="btn btn-green-solid" id="btn-change-pwd">
+              Change Password
+            </button>
+          </form>
+        </div>
+
+        <!-- 4. Data Privacy & GDPR Controls Card -->
+        <div class="card" id="card-privacy">
+          <div class="card-icon-title">
+            <span style="font-size: 18px;">🔒</span> Data Privacy & GDPR Controls
+          </div>
+          <p class="text-muted" style="font-size: 13px; line-height: 1.5; margin-bottom: 16px;">
+            You retain 100% ownership of your financial entries. Download your dataset anytime or permanently delete your account.
+          </p>
+          <div class="flex gap-8" style="flex-wrap: wrap;">
+            <button class="btn btn-ghost" onclick="exportUserDataJson(this)">
+              📥 Export All Data (JSON)
+            </button>
+            <button class="btn btn-ghost" onclick="generateFullFinancialReport({ buttonElement: this })">
+              📄 Download PDF Report
+            </button>
+          </div>
+
+          <div class="danger-zone-box">
+            <div>
+              <div style="color: var(--danger); font-weight: 600; font-size: 13.5px;">Delete Account</div>
+              <div style="color: var(--text-muted); font-size: 12px;">Permanently purge account & all financial records</div>
+            </div>
+            <button class="btn btn-danger btn-sm" onclick="showDeleteAccountModal()">
+              Delete Account
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/layout.js"></script>
+  <script src="/js/pdf-generator.js"></script>
+  <script>
+    Auth.requireLogin();
+    renderSidebar('settings');
+
+    // Update topbar theme button label
+    function updateThemeBtnLabel() {
+      const currentTheme = localStorage.getItem('wealthpulse_theme') || 'slate';
+      const btn = document.getElementById('theme-toggle-btn');
+      if (!btn) return;
+      if (currentTheme === 'light') {
+        btn.innerHTML = '🌙 Dark Mode';
+      } else {
+        btn.innerHTML = '☀️ Light Mode';
+      }
+    }
+
+    function toggleThemeMode() {
+      const currentTheme = localStorage.getItem('wealthpulse_theme') || 'slate';
+      const nextTheme = currentTheme === 'light' ? 'slate' : 'light';
+      setTheme(nextTheme);
+      updateThemeBtnLabel();
+    }
+
+    updateThemeBtnLabel();
+
+    function showNotification(msg, type = 'success') {
+      const container = document.getElementById('settings-global-alert');
+      const alertCls = type === 'success' ? 'alert-success' : 'alert-error';
+      container.innerHTML = `
+        <div class="alert ${alertCls} mb-16" style="display: flex; justify-content: space-between; align-items: center;">
+          <span>${escapeHtml(msg)}</span>
+          <button style="background:none; border:none; color:inherit; cursor:pointer; font-weight:bold;" onclick="this.parentElement.remove()">✕</button>
+        </div>
+      `;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => {
+        if (container.firstChild) container.innerHTML = '';
+      }, 5000);
+    }
+
+    // Populate user profile & preferences
+    async function loadSettingsData() {
+      try {
+        const res = await api('/api/auth/me');
+        const user = (res && res.user) || Auth.user || {};
+        Auth.updateUser(user);
+
+        // Update Top Bar & Inputs
+        const displayName = user.name || 'Member';
+        document.getElementById('top-user-name').textContent = displayName.split(/\s+/)[0] || 'User';
+
+        document.getElementById('prof-name').value = user.name || '';
+        document.getElementById('prof-email').value = user.email || '';
+        document.getElementById('prof-phone').value = user.phone || '';
+
+        document.getElementById('pref-currency').value = user.currency || 'INR';
+        document.getElementById('pref-income-target').value = user.income_target || '';
+        document.getElementById('pref-savings-target').value = user.savings_target || '';
+      } catch (err) {
+        console.error('Failed to load user settings:', err);
+      }
+    }
+
+    // 1. Profile Information Submit
+    document.getElementById('profile-info-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('btn-save-profile');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      const name = document.getElementById('prof-name').value.trim();
+      const email = document.getElementById('prof-email').value.trim();
+      const phone = document.getElementById('prof-phone').value.trim();
+
+      try {
+        const res = await api('/api/auth/profile', {
+          method: 'PATCH',
+          body: JSON.stringify({ name, email, phone }),
+        });
+        if (res && res.user) {
+          Auth.updateUser(res.user);
+          renderSidebar('settings');
+          document.getElementById('top-user-name').textContent = (res.user.name || '').split(/\s+/)[0] || 'User';
+        }
+        showNotification('Profile details updated successfully!');
+      } catch (err) {
+        showNotification(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save Profile Changes';
+      }
+    });
+
+    // 2. Financial Preferences Submit
+    document.getElementById('financial-prefs-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('btn-update-prefs');
+      btn.disabled = true;
+      btn.textContent = 'Updating...';
+
+      const currency = document.getElementById('pref-currency').value;
+      const income_target = Number(document.getElementById('pref-income-target').value) || 0;
+      const savings_target = Number(document.getElementById('pref-savings-target').value) || 0;
+
+      try {
+        const res = await api('/api/auth/profile', {
+          method: 'PATCH',
+          body: JSON.stringify({ currency, income_target, savings_target }),
+        });
+        if (res && res.user) {
+          Auth.updateUser(res.user);
+          renderSidebar('settings');
+        }
+        showNotification('Financial preferences saved successfully!');
+      } catch (err) {
+        showNotification(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Update Preferences';
+      }
+    });
+
+    // 3. Security Password Change Submit
+    document.getElementById('security-password-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('btn-change-pwd');
+      const currentPassword = document.getElementById('sec-current-pwd').value;
+      const newPassword = document.getElementById('sec-new-pwd').value;
+
+      if (newPassword.length < 6) {
+        return showNotification('New password must be at least 6 characters.', 'error');
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Changing Password...';
+
+      try {
+        await api('/api/auth/change-password', {
+          method: 'POST',
+          body: JSON.stringify({ currentPassword, newPassword }),
+        });
+        document.getElementById('sec-current-pwd').value = '';
+        document.getElementById('sec-new-pwd').value = '';
+        showNotification('Password changed successfully!');
+      } catch (err) {
+        showNotification(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Change Password';
+      }
+    });
+
+    // 4. Delete Account Confirmation Modal
+    function showDeleteAccountModal() {
+      const existing = document.getElementById('delete-acc-modal');
+      if (existing) existing.remove();
+
+      const modal = document.createElement('div');
+      modal.id = 'delete-acc-modal';
+      modal.className = 'modal-backdrop';
+      modal.innerHTML = `
+        <div class="modal-content" style="max-width: 440px;">
+          <div class="modal-header">
+            <h2 style="color: var(--danger);">⚠️ Delete Account</h2>
+            <button class="modal-close" onclick="closeDeleteAccountModal()">✕</button>
+          </div>
+          <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 16px;">
+            This action is <strong>permanent and irreversible</strong>. All your financial entries, habits, goals, investments, and records will be deleted forever.
+          </p>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+            To confirm, type <strong>DELETE</strong> below:
+          </p>
+          <input id="delete-confirm-input" placeholder="Type DELETE" style="width: 100%; margin-bottom: 16px;" />
+          <div class="flex gap-8" style="justify-content: flex-end;">
+            <button type="button" class="btn btn-ghost btn-sm" onclick="closeDeleteAccountModal()">Cancel</button>
+            <button type="button" class="btn btn-danger btn-sm" id="btn-final-delete" onclick="performAccountDeletion()">Permanently Delete</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    function closeDeleteAccountModal() {
+      const m = document.getElementById('delete-acc-modal');
+      if (m) m.remove();
+    }
+
+    async function performAccountDeletion() {
+      const input = document.getElementById('delete-confirm-input');
+      if (!input || input.value.trim() !== 'DELETE') {
+        alert('Please type DELETE exactly to confirm account deletion.');
+        return;
+      }
+      const btn = document.getElementById('btn-final-delete');
+      btn.disabled = true;
+      btn.textContent = 'Deleting...';
+
+      try {
+        await api('/api/auth/delete-account', { method: 'DELETE' });
+        Auth.clear();
+        alert('Your account and all associated data have been permanently removed.');
+        window.location.href = '/register.html';
+      } catch (err) {
+        alert('Failed to delete account: ' + err.message);
+        btn.disabled = false;
+        btn.textContent = 'Permanently Delete';
+      }
+    }
+
+    loadSettingsData();
+  </script>
+</body>
+</html>
