@@ -1,14 +1,18 @@
 {
-  "name": "wealthpulse-app",
-  "version": "1.0.0",
-  "description": "WealthPulse · Financial Habit Builder & Wealth Growth Tracker",
+  "name": "wealthpulse",
+  "version": "2.0.0",
+  "description": "WealthPulse - Habit & Wealth Intelligence Platform",
   "main": "backend/server.js",
   "scripts": {
     "start": "node backend/server.js",
-    "dev": "node backend/server.js",
-    "postinstall": "cd backend && npm install"
+    "build": "cd backend && npm install"
   },
-  "engines": {
-    "node": ">=20.0.0"
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.5"
   }
 }
