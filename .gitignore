@@ -1,0 +1,18 @@
+# Node dependencies
+node_modules/
+backend/node_modules/
+
+# Environment configuration
+.env
+backend/.env
+
+# SQLite Database
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+backend/db/*.sqlite*
+
+# Operating System Files
+.DS_Store
+Thumbs.db

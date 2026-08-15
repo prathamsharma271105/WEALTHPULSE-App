@@ -1,0 +1,14 @@
+{
+  "name": "wealthpulse-app",
+  "version": "1.0.0",
+  "description": "WealthPulse · Financial Habit Builder & Wealth Growth Tracker",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node backend/server.js",
+    "postinstall": "cd backend && npm install"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
